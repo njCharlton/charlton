@@ -2,7 +2,7 @@
 <?php require_once("../includes/db_connection.php"); ?>
 <?php require_once("../includes/functions.php"); ?>
 <?php
-	// 2. Perform database query
+	
 	$query  = "SELECT * FROM subjects WHERE visible = 1 ORDER BY position ASC";
 	$result = mysqli_query($connection, $query);
    confirm_query($result);
@@ -17,17 +17,39 @@
    <div id="navigation">
    <ul>
 		<?php
-			// 3. Use returned data (if any)
 			while($subject = mysqli_fetch_assoc($result)) {
-			// output data from each row
+			
 		?>
 		
 		<li>
 			<?php 
 				echo $subject["menu_name"]." (".$subject["id"].")"; 
+
+
+				$query1  = "SELECT * FROM pages WHERE visible = 1 and subject_id = ".$subject["id"]." ORDER BY position ASC";
+				$pages_set = mysqli_query($connection, $query1);
+				confirm_query($pages_set);
+				// Test if there was a query error
+				if (!$pages_set) {
+					die("Database query failed.");	
+				} 
             ?>
+			<ul class="pages">
+				<?php
+					while($page = mysqli_fetch_assoc($pages_set)) {
+				?>
+				<li>
+						<?php
+							echo $page["menu_name"];
+						?>
+				</li>
+				<?php
+					}
+					?>
+			</ul>
 		</li>
 	  <?php
+
 			}
 		?>
 		</ul>
@@ -40,6 +62,7 @@
 <?php
 		  // 4. Release returned data
 		  mysqli_free_result($result);
+		  mysqli_free_result($pages_set);
 		?>
 
 <?php
