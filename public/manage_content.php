@@ -3,13 +3,8 @@
 <?php require_once("../includes/functions.php"); ?>
 <?php
 	
-	$query  = "SELECT * FROM subjects WHERE visible = 1 ORDER BY position ASC";
-	$result = mysqli_query($connection, $query);
-   confirm_query($result);
-	// Test if there was a query error
-	if (!$result) {
-      die("Database query failed.");	
-	} 
+	$subject_set = find_all_subjects()
+	
 ?>
 <?php include("../includes/layouts/header.php"); ?>
 
@@ -24,16 +19,9 @@
 		<li>
 			<?php 
 				echo $subject["menu_name"]." (".$subject["id"].")"; 
-
-
-				$query1  = "SELECT * FROM pages WHERE visible = 1 and subject_id = ".$subject["id"]." ORDER BY position ASC";
-				$pages_set = mysqli_query($connection, $query1);
-				confirm_query($pages_set);
-				// Test if there was a query error
-				if (!$pages_set) {
-					die("Database query failed.");	
-				} 
-            ?>
+			?>
+			<?php $page_set =
+			 find_all_pages_subject ($subject["id"]); ?>	
 			<ul class="pages">
 				<?php
 					while($page = mysqli_fetch_assoc($pages_set)) {
