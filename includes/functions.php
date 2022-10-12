@@ -38,3 +38,46 @@ function find_all_pages_subject($subject_id)
     // die();
     return $pages_set;
 }
+
+// navigation takes 2 arguments
+// - the currently selected subject (if any)
+// - the currently selected page (if any)
+function navigation($subject, $page) {
+    $output = "<ul class=\"subjects\">";
+    $subject_set = find_all_subjects(); 
+    //var_dump($subject_set);
+    while ($subject = mysqli_fetch_assoc($subject_set)) {
+  
+        $output .= "<li";
+        if ($subject["id"] == $subject) {
+        $output .=  " class=\"selected\"";
+        }
+        $output .=  ">";
+        
+         $output .=  "<a href=\"manage_content.php?subject="; 
+        $output .= "<?php  urlencode($subject[id])"; 
+         $output .= "\">;  
+         $output .=  "($subject['menu_name']) . " " . $subject["id"];
+         $output .= "</a>";"
+        $page_set = "find_all_pages_subject($subject['id']);
+            //var_dump($page_set);
+         $output .= <ul class=\"pages\">";
+         while ($page = mysqli_fetch_assoc($page_set)) {
+         $output .= "<li";
+         if ($page["id"] == $page) {
+        $output .=  " class=\"selected\"";
+         }
+        $output .=  ">";
+        $output .= "<a href=\"manage_content.php?page=";
+        $output .=  urlencode($page["id"]);
+        $output .= "\">"; 
+        $output .=  $page["menu_name"]; 
+        $output .= "</a></li>";
+    }
+        mysqli_free_result($page_set);
+        $output .= "</ul> </li>";
+    }
+     mysqli_free_result($subject_set); 
+    $output .= "</ul>";
+    return $output;
+}
