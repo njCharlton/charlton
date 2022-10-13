@@ -18,11 +18,23 @@ if (isset($_GET["subject"])) {
 
 <div id="main">
 	<div id="navigation">
-	<?php echo navigation($selected_subject, $selected_page); ?>	
+	<?php echo navigation($selected_subject, $selected_page); ?>
+	<br />
+	<a href="new_subject.php">+ Add a subject</a>	
 	</div>
 	<div id="page">
+		<?php if ($current_subject)  ?>
 		<h2>Manage Content</h2>
-		<?php echo $selected_subject; ?><br />
-		<?php echo $selected_page; ?>
+		<?php if ($selected_subject) { ?>
+
+			<?php $current_subject = find_subject_by_id($subject); ?>
+		Menu name: <?php echo $current_subject["menu_name"]; ?><br />
+
+		<?php } elseif ($selected_page) { ?>
+		<?php echo ($selected_page); ?>
+		<?php } else { ?>
+			Please select a subject or a page.
+		<?php }?>
+		
 	</div>
 </div>

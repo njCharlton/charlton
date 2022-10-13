@@ -8,12 +8,13 @@ function confirm_query($result_set)
 }
 function find_all_subjects()
 {
-    //get database connection
+     //var_dump($connection);
+  //get database connection
     global $connection ;
-    //var_dump($connection);
-
+ 
    //create sql query
-    $query  = "SELECT * FROM subjects WHERE visible = 1 ORDER BY position ASC";
+   //$query =  "WHERE visible = 1"; 
+    $query  = "SELECT * FROM subjects ORDER BY position ASC";
 
     //send query to database and get result
     $subject_set = mysqli_query($connection, $query);
@@ -31,7 +32,10 @@ function find_all_pages_subject($subject_id)
 {
     global $connection;
 
-    $query1  = "SELECT * FROM pages WHERE visible = 1 and subject_id = ".$subject_id." ORDER BY position ASC";
+    $safe_subject_id = mysqli_real_escape_string($connection,
+    $subject_id);
+
+    $query1  = "SELECT * FROM pages WHERE visible = 1 and subject_id = ".$safe_subject_id." ORDER BY position ASC";
     $pages_set = mysqli_query($connection, $query1);
     confirm_query($pages_set);
     // var_dump($pages_set);
@@ -39,10 +43,41 @@ function find_all_pages_subject($subject_id)
     return $pages_set;
 }
 
+function find_subject_by_id($subject_id) {
+
+      //var_dump($connection);
+  //get database connection
+  global $connection ;
+
+  $safe_subject_id = mysqli_real_escape_string($connection,
+  $subject_id);
+ 
+  //create sql query
+   $query  = "SELECT * FROM subjects WHERE id = {$safe_subject_id} LIMIT 1";
+
+   //send query to database and get result
+   $subject_set = mysqli_query($connection, $query);
+
+   //check if result has no value
+   confirm_query($subject_set);
+   // var_dump($subject_set);
+   // die();
+
+   //return value to be used
+  if($subject = mysqli_fetch_assoc($subject_set)) {
+    return $subject;
+  }else {
+    return null;
+  }
+
+ 
+   
+}
+
 // navigation takes 2 arguments
 // - the currently selected subject (if any)
 // - the currently selected page (if any)
-function navigation($subject, $page) {
+function navigation($subject_id, $page_id) {
     $output = "<ul class=\"subjects\">";
     $subject_set = find_all_subjects(); 
     //var_dump($subject_set);
@@ -58,10 +93,10 @@ function navigation($subject, $page) {
         $output .= "<?php  urlencode($subject[id])"; 
          $output .= "\">;  
          $output .=  "($subject['menu_name']) . " " . $subject["id"];
-         $output .= "</a>";"
-        $page_set = "find_all_pages_subject($subject['id']);
-            //var_dump($page_set);
-         $output .= <ul class=\"pages\">";
+         $output .= "</a>";
+
+         $page_set = find_all_pages_subject($subject['id']) ;
+         $output .= '<ul class=\"pages\">';
          while ($page = mysqli_fetch_assoc($page_set)) {
          $output .= "<li";
          if ($page["id"] == $page) {
