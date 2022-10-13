@@ -24,11 +24,12 @@ if (isset($_GET["subject"])) {
 	</div>
 	<div id="page">
 		<?php if ($current_subject)  ?>
-		<h2>Manage Content</h2>
+		<h2>Manage Subject</h2>
+		Menu name: <?php echo $current_subject["menu_name"]; ?><br />
 		<?php if ($selected_subject) { ?>
 
 			<?php $current_subject = find_subject_by_id($subject); ?>
-		Menu name: <?php echo $current_subject["menu_name"]; ?><br />
+		
 
 		<?php } elseif ($selected_page) { ?>
 		<?php echo ($selected_page); ?>
