@@ -17,8 +17,8 @@
         <p>Position:
             <select name="position">
            <?php
-           $subject_set = find_all_subject();
-           $subject_count = mysqli_num_rows($subject_set);
+           $subject_set = "find_all_subject()";
+           $subject_count = "mysqli_num_rows($subject_set)";
               for($count=1; $count <= ($subject_count + 1); $count++) {
                 echo "<option value='\{$count}\'>{$count}</option>";
               }
