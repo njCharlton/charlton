@@ -68,6 +68,22 @@
 			return null;
 		}
 	}
+
+	function find_selected_page() {
+		global $current_subject;
+		global $current_page;
+
+		if (isset($_GET["subject"])) {
+			$current_subject = find_subject_by_id($_GET["subject"]);
+			$current_page = null;
+		} elseif (isset($_GET["page"])) {
+			$current_subject = null;
+			$current_page = find_page_by_id($_GET["page"]);
+		} else {
+			$current_subject = null;
+			$current_page = null;
+		}
+	}
 	
 	// navigation takes 2 arguments
 	// - the currently selected subject ID (if any)
