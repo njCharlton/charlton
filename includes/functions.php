@@ -1,21 +1,36 @@
 <?php
 
-function redirect_to($new_location) {
-	header("Location: . $new_location");
-	exit;
-}
+	function redirect_to($new_location) {
+	  header("Location: " . $new_location);
+	  exit;
+	}
 
-function mysql_prep($string) {
-	global $connection;
+	function mysql_prep($string) {
+		global $connection;
+		
+		$escaped_string = mysqli_real_escape_string($connection, $string);
+		return $escaped_string;
+	}
 	
-	$escaped_string = mysqli_real_escape_string($connection, $string);
-	return $escaped_string;
-}
-
 	function confirm_query($result_set) {
 		if (!$result_set) {
 			die("Database query failed.");
 		}
+	}
+
+	function form_errors($errors=array()) {
+		$output = "";
+		if (!empty($errors)) {
+		  $output .= "<div class=\"error\">";
+		  $output .= "Please fix the following errors:";
+		  $output .= "<ul>";
+		  foreach ($errors as $key => $error) {
+		    $output .= "<li>{$error}</li>";
+		  }
+		  $output .= "</ul>";
+		  $output .= "</div>";
+		}
+		return $output;
 	}
 	
 	function find_all_subjects() {
@@ -80,11 +95,11 @@ function mysql_prep($string) {
 			return null;
 		}
 	}
-
+	
 	function find_selected_page() {
 		global $current_subject;
 		global $current_page;
-
+		
 		if (isset($_GET["subject"])) {
 			$current_subject = find_subject_by_id($_GET["subject"]);
 			$current_page = null;
@@ -96,16 +111,16 @@ function mysql_prep($string) {
 			$current_page = null;
 		}
 	}
-	
+
 	// navigation takes 2 arguments
-	// - the currently selected subject ID (if any)
-	// - the currently selected page ID (if any)
-	function navigation($subject_id, $page_id) {
+	// - the current subject array or null
+	// - the current page array or null
+	function navigation($subject_array, $page_array) {
 		$output = "<ul class=\"subjects\">";
 		$subject_set = find_all_subjects();
 		while($subject = mysqli_fetch_assoc($subject_set)) {
 			$output .= "<li";
-			if ($subject["id"] == $subject_id) {
+			if ($subject_array && $subject["id"] == $subject_array["id"]) {
 				$output .= " class=\"selected\"";
 			}
 			$output .= ">";
@@ -119,7 +134,7 @@ function mysql_prep($string) {
 			$output .= "<ul class=\"pages\">";
 			while($page = mysqli_fetch_assoc($page_set)) {
 				$output .= "<li";
-				if ($page["id"] == $page_id) {
+				if ($page_array && $page["id"] == $page_array["id"]) {
 					$output .= " class=\"selected\"";
 				}
 				$output .= ">";
