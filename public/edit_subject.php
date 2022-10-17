@@ -103,9 +103,10 @@ if (isset($_POST['submit'])) {
 		<a href="manage_content.php">Cancel</a>
 		&nbsp;
 		&nbsp;
-		<a href="delete_subject.php?subject=<?php echo urlencode($current_subject["id"]) ?>" onclick="return confirm('Are you sure?');">Delete subject</a>
+		<a href="delete_subject.php?subject=<?php echo urlencode($current_subject["id"]); ?>" onclick="return confirm('Are you sure?');">Delete subject</a>
 		
 	</div>
 </div>
 
 <?php include("../includes/layouts/footer.php"); ?>
+
